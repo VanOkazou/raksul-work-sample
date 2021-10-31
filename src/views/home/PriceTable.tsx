@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Fragment } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { ReactElement } from "react";
 
-import useFetchPrices from "./useFetchPrices";
+import type { Price } from "services/prices";
 
 function createData(
   name: string | number,
@@ -17,19 +17,16 @@ function createData(
   return [name, ...prices];
 }
 
-export default function PriceTable(): ReactElement {
-  const { data, isFetching } = useFetchPrices();
+type Props = {
+  data: Price[][];
+};
 
-  if (isFetching || !data) return <p>Is Loading...</p>;
-
-  const rows = data.prices.map((item) => {
+export default function PriceTable({ data }: Props): ReactElement {
+  const rows = data.map((item) => {
     const quantity = item[0].quantity;
     const prices = item.map(({ price }) => price);
     return createData(quantity, ...prices);
   });
-
-  console.log("data", data);
-  console.log("rows", rows);
 
   return (
     <TableContainer component={Paper}>
@@ -47,17 +44,19 @@ export default function PriceTable(): ReactElement {
         <TableBody>
           {rows.map((row, rowIndex) => (
             <TableRow
-              key={rowIndex}
+              key={`cell-${rowIndex}`}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               {row.map((cell, cellIndex) => (
-                <TableCell
-                  align={cellIndex === 0 ? "left" : "right"}
-                  component={cellIndex === 0 ? "th" : "td"}
-                  scope="row"
-                >
-                  {cell}
-                </TableCell>
+                <Fragment key={cellIndex}>
+                  <TableCell
+                    align={cellIndex === 0 ? "left" : "right"}
+                    component={cellIndex === 0 ? "th" : "td"}
+                    scope="row"
+                  >
+                    {cell}
+                  </TableCell>
+                </Fragment>
               ))}
             </TableRow>
           ))}

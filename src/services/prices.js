@@ -11,13 +11,13 @@ export interface Price {
   quantity: Quantity;
 }
 
-export interface GetAll {
+export interface GetAllResponse {
   paper_size: PaperSize;
   prices: Price[][];
 }
 
 export interface PriceApi {
-  getAll(paperSize?: PaperSize): Promise<GetAll>;
+  getAll(paperSize?: PaperSize): Promise<GetAllResponse>;
 }
 
 export default function priceApi(): PriceApi {
