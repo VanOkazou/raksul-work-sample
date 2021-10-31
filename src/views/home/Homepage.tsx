@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid";
 import { ReactElement } from "react";
 
 import type { PaperSize } from "services/prices";
-import { parseQueryParams, stringifyQuery } from "views/utils/url";
+import { parseQueryParams, stringifyQuery } from "utils/url";
 
 import Filters from "./Filters";
 import Footer from "./Footer";

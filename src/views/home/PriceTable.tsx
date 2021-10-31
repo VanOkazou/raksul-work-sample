@@ -9,6 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { ReactElement } from "react";
 
+import { formatPrice } from "utils/number";
 import type { Price } from "services/prices";
 
 import { TableCell } from "./PriceTable.style";
@@ -111,7 +112,7 @@ export default function PriceTable({
                     }
                     scope="row"
                   >
-                    {price}
+                    {formatPrice(price)}
                   </TableCell>
                 </Fragment>
               ))}
