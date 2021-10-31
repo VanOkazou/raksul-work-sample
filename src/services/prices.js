@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_URL } from "./constants";
 
-type PaperSize = "a4" | "a5" | "b4" | "b5";
+export type PaperSize = "a4" | "a5" | "b4" | "b5";
 type BusinessDay = 1 | 2 | 3 | 4 | 5;
 type Quantity = 10 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
 

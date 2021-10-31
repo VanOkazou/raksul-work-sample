@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -6,13 +5,21 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import type { ReactElement } from "react";
 
-import { PAPER_SIZES, PAPER_A4_SIZE } from "./constants";
+import type { PaperSize } from "services/prices";
 
-export default function Filters(): ReactElement {
-  const [size, setSize] = useState(PAPER_A4_SIZE);
+import { PAPER_SIZES } from "./constants";
 
+type Props = {
+  value: PaperSize;
+  onFilterChange: (size: PaperSize) => void;
+};
+
+export default function Filters({
+  onFilterChange,
+  value,
+}: Props): ReactElement {
   const handleChange = (event: SelectChangeEvent) => {
-    setSize(event.target.value as string);
+    onFilterChange(event.target.value as PaperSize);
   };
 
   return (
@@ -22,7 +29,7 @@ export default function Filters(): ReactElement {
         <Select
           labelId="paper-sizes"
           id="paper-sizes-select"
-          value={size}
+          value={value}
           label="Sizes"
           onChange={handleChange}
         >
