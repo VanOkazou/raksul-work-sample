@@ -1,7 +1,7 @@
-import Api from "./api";
+import priceApi from "./prices";
 
 export default function client() {
   return {
-    api: Api(),
+    prices: priceApi(),
   };
 }
