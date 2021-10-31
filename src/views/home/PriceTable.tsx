@@ -16,12 +16,16 @@ import type { SelectedPrice } from "./types";
 type Props = {
   data: Price[][];
   onCellClick: (selectedPrice: SelectedPrice) => void;
+  onCellHover: (selectedPrice: SelectedPrice | null) => void;
+  hoveredPrice: SelectedPrice | null;
   selectedPrice: SelectedPrice | null;
 };
 
 export default function PriceTable({
   data,
   onCellClick,
+  onCellHover,
+  hoveredPrice,
   selectedPrice,
 }: Props): ReactElement {
   const rows = data.map((item) => {
@@ -60,11 +64,28 @@ export default function PriceTable({
                   <TableCell
                     align={cellIndex === 0 ? "left" : "right"}
                     component={cellIndex === 0 ? "th" : "td"}
-                    isSelected={
-                      selectedPrice &&
-                      selectedPrice.businessDay === businessDay &&
-                      selectedPrice.quantity === row.quantity
+                    isHovered={
+                      !!(
+                        hoveredPrice &&
+                        (hoveredPrice.quantity === row.quantity ||
+                          hoveredPrice.businessDay === businessDay)
+                      )
                     }
+                    isSelected={
+                      !!(
+                        selectedPrice &&
+                        selectedPrice.businessDay === businessDay &&
+                        selectedPrice.quantity === row.quantity
+                      )
+                    }
+                    onMouseEnter={() =>
+                      onCellHover({
+                        businessDay,
+                        quantity: row.quantity,
+                        price,
+                      })
+                    }
+                    onMouseLeave={() => onCellHover(null)}
                     onClick={() =>
                       onCellClick({
                         businessDay,

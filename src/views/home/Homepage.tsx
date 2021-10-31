@@ -19,6 +19,7 @@ export default function HomePage(): ReactElement {
   const [selectedPrice, setSelectedPrice] = useState<SelectedPrice | null>(
     null
   );
+  const [hoveredPrice, setHoveredPrice] = useState<SelectedPrice | null>(null);
   const { pathname, search } = useLocation();
   const history = useHistory();
   const parsedSearch = parseQueryParams(search);
@@ -38,6 +39,10 @@ export default function HomePage(): ReactElement {
     setSelectedPrice(newSelectedPrice);
   }
 
+  function handleCellHover(newHoveredPrice: SelectedPrice | null) {
+    setHoveredPrice(newHoveredPrice);
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }} py="20px">
       <Grid container spacing={2}>
@@ -54,7 +59,9 @@ export default function HomePage(): ReactElement {
             <PriceTable
               data={data.prices}
               onCellClick={handleCellClick}
+              onCellHover={handleCellHover}
               selectedPrice={selectedPrice}
+              hoveredPrice={hoveredPrice}
             />
           )}
         </Grid>
