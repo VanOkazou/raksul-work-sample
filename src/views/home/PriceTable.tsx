@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
+
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -10,22 +10,27 @@ import { ReactElement } from "react";
 
 import type { Price } from "services/prices";
 
-function createData(
-  name: string | number,
-  ...prices: number[]
-): (string | number)[] {
-  return [name, ...prices];
-}
+import { TableCell } from "./PriceTable.style";
+import type { SelectedPrice } from "./types";
 
 type Props = {
   data: Price[][];
+  onCellClick: (selectedPrice: SelectedPrice) => void;
+  selectedPrice: SelectedPrice | null;
 };
 
-export default function PriceTable({ data }: Props): ReactElement {
+export default function PriceTable({
+  data,
+  onCellClick,
+  selectedPrice,
+}: Props): ReactElement {
   const rows = data.map((item) => {
     const quantity = item[0].quantity;
-    const prices = item.map(({ price }) => price);
-    return createData(quantity, ...prices);
+    const prices = item.map(({ price, business_day }) => ({
+      price,
+      businessDay: business_day,
+    }));
+    return { quantity, prices };
   });
 
   return (
@@ -47,14 +52,29 @@ export default function PriceTable({ data }: Props): ReactElement {
               key={`cell-${rowIndex}`}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              {row.map((cell, cellIndex) => (
-                <Fragment key={cellIndex}>
+              <TableCell align="left" component="th" scope="row">
+                {row.quantity}
+              </TableCell>
+              {row.prices.map(({ price, businessDay }, cellIndex) => (
+                <Fragment key={`${row.quantity}-${businessDay}`}>
                   <TableCell
                     align={cellIndex === 0 ? "left" : "right"}
                     component={cellIndex === 0 ? "th" : "td"}
+                    isSelected={
+                      selectedPrice &&
+                      selectedPrice.businessDay === businessDay &&
+                      selectedPrice.quantity === row.quantity
+                    }
+                    onClick={() =>
+                      onCellClick({
+                        businessDay,
+                        quantity: row.quantity,
+                        price,
+                      })
+                    }
                     scope="row"
                   >
-                    {cell}
+                    {price}
                   </TableCell>
                 </Fragment>
               ))}

@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "@types/qs": "^6.9.7",
-    "@types/react-router-dom": "^5.1.7"
+    "@types/react-router-dom": "^5.1.7",
+    "@types/styled-components": "^5.1.15"
   }
 }

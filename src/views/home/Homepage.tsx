@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -8,11 +9,16 @@ import type { PaperSize } from "services/prices";
 import { parseQueryParams, stringifyQuery } from "views/utils/url";
 
 import Filters from "./Filters";
+import Footer from "./Footer";
 import PriceTable from "./PriceTable";
 import useFetchPrices from "./useFetchPrices";
 import { PAPER_A4_SIZE } from "./constants";
+import type { SelectedPrice } from "./types";
 
 export default function HomePage(): ReactElement {
+  const [selectedPrice, setSelectedPrice] = useState<SelectedPrice | null>(
+    null
+  );
   const { pathname, search } = useLocation();
   const history = useHistory();
   const parsedSearch = parseQueryParams(search);
@@ -28,6 +34,10 @@ export default function HomePage(): ReactElement {
     }
   }
 
+  function handleCellClick(newSelectedPrice: SelectedPrice) {
+    setSelectedPrice(newSelectedPrice);
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }} py="20px">
       <Grid container spacing={2}>
@@ -38,10 +48,18 @@ export default function HomePage(): ReactElement {
           />
         </Grid>
         <Grid item xs={8}>
-          {!data ? <CircularProgress /> : <PriceTable data={data.prices} />}
+          {!data ? (
+            <CircularProgress />
+          ) : (
+            <PriceTable
+              data={data.prices}
+              onCellClick={handleCellClick}
+              selectedPrice={selectedPrice}
+            />
+          )}
         </Grid>
         <Grid item xs={12}>
-          2
+          <Footer price={selectedPrice?.price} />
         </Grid>
       </Grid>
     </Box>
