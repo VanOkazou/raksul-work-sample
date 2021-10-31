@@ -1,7 +1,8 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -28,7 +29,8 @@ export default function PriceTable({
   hoveredPrice,
   selectedPrice,
 }: Props): ReactElement {
-  const rows = data.map((item) => {
+  const [showAll, setShowAll] = useState(false);
+  const formatRows = data.map((item) => {
     const quantity = item[0].quantity;
     const prices = item.map(({ price, business_day }) => ({
       price,
@@ -36,6 +38,13 @@ export default function PriceTable({
     }));
     return { quantity, prices };
   });
+
+  const rows = showAll ? formatRows : formatRows.slice(0, 5);
+
+  function handleShowAllButtonClick() {
+    setShowAll(!showAll);
+    onCellClick(null);
+  }
 
   return (
     <TableContainer component={Paper}>
@@ -78,6 +87,13 @@ export default function PriceTable({
                         selectedPrice.quantity === row.quantity
                       )
                     }
+                    isTargeted={
+                      !!(
+                        hoveredPrice &&
+                        hoveredPrice.businessDay === businessDay &&
+                        hoveredPrice.quantity === row.quantity
+                      )
+                    }
                     onMouseEnter={() =>
                       onCellHover({
                         businessDay,
@@ -103,6 +119,11 @@ export default function PriceTable({
           ))}
         </TableBody>
       </Table>
+      <Box>
+        <Button onClick={handleShowAllButtonClick}>
+          {showAll ? "See less" : "See more"}
+        </Button>
+      </Box>
     </TableContainer>
   );
 }

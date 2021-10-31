@@ -35,7 +35,7 @@ export default function HomePage(): ReactElement {
     }
   }
 
-  function handleCellClick(newSelectedPrice: SelectedPrice) {
+  function handleCellClick(newSelectedPrice: SelectedPrice | null) {
     setSelectedPrice(newSelectedPrice);
   }
 
